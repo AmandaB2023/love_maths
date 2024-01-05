@@ -12,10 +12,11 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 //set game type to value of attribute, this will tell us what game type we are wanting to run
                 let gameType = this.getAttribute("data-type");
-                alert(`You clicked ${gameType}`);
+                runGame(gameType);
             }
         });
     }
+    runGame("addition");
 });
 
 /**
@@ -23,10 +24,22 @@ document.addEventListener("DOMContentLoaded", function () {
  * and after the user's anser has been submitted.
  */
 // math random assigns a random number , math floor rounds the number to the nearest integer 
-//Creates two random numbers betwwen 1 and 25
-function runGame() {
+
+function runGame(gameType) {
+    //Creates two random numbers betwwen 1 and 25
     let num1 = Math.floor(Math.random() * 25) + 1;
     let num2 = Math.floor(Math.random() * 25) + 1;
+
+    //Checking gametype parameter, if equals to addition shows addion question
+    if (gameType === "addition") {
+        displayAdditionQuestion(num1, num2);
+        //if not then it will show an error
+    } else {
+        alert(`Unknown game type: ${gameType}`);
+        // Will stop game from running and print message to console
+        throw `Unknown game type: ${gameType}.Aborting!`;
+    }
+
 }
 
 function checkAnswer() {
@@ -45,8 +58,10 @@ function incrementWrongAnswer() {
 
 }
 
-function displayAdditionQuestion() {
-
+function displayAdditionQuestion(operand1, operand2) {
+    document.getElementById('operand1').textContent = operand1;
+    document.getElementById('operand2').textContent = operand2;
+    document.getElementById('operator').textContent = "+";
 }
 
 function displaySubtractQuestion() {
