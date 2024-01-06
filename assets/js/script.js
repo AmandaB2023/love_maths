@@ -1,52 +1,79 @@
 // Wait for the DOM to finish loading before running the game
 // Get the button elements and add event listeners to them
-// Listens for a particular even to happen then the dOm will be loaded and execute funcation
+
 document.addEventListener("DOMContentLoaded", function () {
     let buttons = document.getElementsByTagName("button");
 
     for (let button of buttons) {
         button.addEventListener("click", function () {
-            // this refers to the button that was just clicked
             if (this.getAttribute("data-type") === "submit") {
-                alert("You clicked Submit!");
+                checkAnswer();
             } else {
-                //set game type to value of attribute, this will tell us what game type we are wanting to run
                 let gameType = this.getAttribute("data-type");
                 runGame(gameType);
             }
         });
     }
+
     runGame("addition");
+
 });
 
 /**
- * The main game "loop", called when the ecript is first loaded
- * and after the user's anser has been submitted.
+ * The main game "loop", called when the script is first loaded
+ * and after the user's answer has been processed
  */
-// math random assigns a random number , math floor rounds the number to the nearest integer 
-
 function runGame(gameType) {
-    //Creates two random numbers betwwen 1 and 25
+
+    // Creates two random numbers between 1 and 25
     let num1 = Math.floor(Math.random() * 25) + 1;
     let num2 = Math.floor(Math.random() * 25) + 1;
 
-    //Checking gametype parameter, if equals to addition shows addion question
     if (gameType === "addition") {
         displayAdditionQuestion(num1, num2);
-        //if not then it will show an error
     } else {
         alert(`Unknown game type: ${gameType}`);
-        // Will stop game from running and print message to console
-        throw `Unknown game type: ${gameType}.Aborting!`;
+        throw `Unknown game type: ${gameType}. Aborting!`;
     }
 
 }
 
+/**
+ * Checks the answer agaist the first element in
+ * the returned calculateCorrectAnswer array
+ */
 function checkAnswer() {
+
+    let userAnswer = parseInt(document.getElementById("answer-box").value);
+    let calculatedAnswer = calculateCorrectAnswer();
+    let isCorrect = userAnswer === calculatedAnswer[0];
+
+    if (isCorrect) {
+        alert("Hey! You got it right! :D");
+    } else {
+        alert(`Awwww.... you answered ${userAnswer}. The correct answer was ${calculatedAnswer[0]}!`);
+    }
+
+    runGame(calculatedAnswer[1]);
 
 }
 
-function calculateCorretAnswer() {
+/**
+ * Gets the operands (the numbers) and the operator (plus, minus etc)
+ * directly from the dom, and returns the correct answer.
+ */
+function calculateCorrectAnswer() {
+
+    let operand1 = parseInt(document.getElementById('operand1').innerText);
+    let operand2 = parseInt(document.getElementById('operand2').innerText);
+    let operator = document.getElementById("operator").innerText;
+
+    if (operator === "+") {
+        return [operand1 + operand2, "addition"];
+    } else {
+        alert(`Unimplemented operator ${operator}`);
+        throw `Unimplemented operator ${operator}. Aborting!`;
+    }
 
 }
 
@@ -59,9 +86,11 @@ function incrementWrongAnswer() {
 }
 
 function displayAdditionQuestion(operand1, operand2) {
+
     document.getElementById('operand1').textContent = operand1;
     document.getElementById('operand2').textContent = operand2;
     document.getElementById('operator').textContent = "+";
+
 }
 
 function displaySubtractQuestion() {
